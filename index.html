@@ -164,23 +164,19 @@ Copy Rules Screenshot
 async function copyRulesScreenshot(){
   const preview=document.getElementById("screenshotPreview");
   const target=document.getElementById("shareCapture");
-  if(!preview) return;
-
-  if(!target){
-    preview.innerHTML="<div class='rules'>No rules to capture yet</div>";
-    preview.classList.remove("hidden");
-    return;
-  }
+  if(!preview || !target) return;
 
   const canvas=await html2canvas(target,{backgroundColor:"#141c2f",scale:2});
-  const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
-  if(!blob){
-    preview.innerHTML="<div class='rules'>Screenshot failed</div>";
-    preview.classList.remove("hidden");
-    return;
-  }
 
-  const url=URL.createObjectURL(blob);
+  let url=null;
+
+  const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
+  if(blob){
+    url=URL.createObjectURL(blob);
+  }else{
+    // fallback that always works
+    url=canvas.toDataURL("image/png");
+  }
 
   preview.innerHTML=`
     <img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px;">
@@ -192,8 +188,6 @@ async function copyRulesScreenshot(){
   preview.classList.remove("hidden");
 }
 </script>
-
-
 
 <script>
 const donateMessages=[
@@ -481,6 +475,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
