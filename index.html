@@ -162,28 +162,31 @@ Copy Rules Screenshot
 
 <script>
 async function copyRulesScreenshot(){
-  const target=document.getElementById("shareCapture");
   const preview=document.getElementById("screenshotPreview");
-  if(!target || typeof html2canvas!=="function") return;
+  const target=document.getElementById("shareCapture");
+  if(!preview) return;
 
-  // force layout to settle
-  await new Promise(r=>requestAnimationFrame(r));
+  if(!target){
+    preview.innerHTML="<div class='rules'>No rules to capture yet</div>";
+    preview.classList.remove("hidden");
+    return;
+  }
 
-  const canvas=await html2canvas(target,{
-    backgroundColor:"#141c2f",
-    scale:2,
-    removeContainer:true
-  });
+  const canvas=await html2canvas(target,{backgroundColor:"#141c2f",scale:2});
+  const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
+  if(!blob){
+    preview.innerHTML="<div class='rules'>Screenshot failed</div>";
+    preview.classList.remove("hidden");
+    return;
+  }
 
-  if(!canvas.width || !canvas.height) return;
-
-  const url=canvas.toDataURL("image/png");
+  const url=URL.createObjectURL(blob);
 
   preview.innerHTML=`
     <img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px;">
     <br>
-    <a href="${url}" download="dr-druids-rules.png">
-      <button class="copyBtn">Download Screenshot</button>
+    <a href="${url}" download="dr-druids-rules.png" class="copyBtn" style="text-decoration:none;display:inline-block;">
+      Download Screenshot
     </a>
   `;
   preview.classList.remove("hidden");
@@ -386,7 +389,10 @@ game.classList.remove("hidden");
 container.classList.remove("hasMode");
 output.innerHTML="";
 const preview=document.getElementById("screenshotPreview");
-if(preview) preview.classList.add("hidden");
+if(preview){
+  preview.innerHTML="";
+  preview.classList.add("hidden");
+}
 const mode=modeSelect.value,n=parseInt(playersSel.value,10);
 
 /* Context 1 and 2 */
@@ -475,6 +481,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
