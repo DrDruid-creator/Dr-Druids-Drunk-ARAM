@@ -166,7 +166,11 @@ async function copyRulesScreenshot(){
   const preview=document.getElementById("screenshotPreview");
   if(!target || typeof html2canvas!=="function") return;
 
-  const canvas=await html2canvas(target,{backgroundColor:null,scale:2});
+ const canvas=await html2canvas(target,{
+  backgroundColor:"#141c2f",
+  scale:2
+});
+
   const url=canvas.toDataURL("image/png");
 
   preview.innerHTML = `
@@ -179,6 +183,16 @@ async function copyRulesScreenshot(){
   preview.classList.remove("hidden");
 }
 </script>
+
+  <script>
+function clearScreenshotPreview(){
+  const preview=document.getElementById("screenshotPreview");
+  if(!preview) return;
+  preview.innerHTML="";
+  preview.classList.add("hidden");
+}
+</script>
+
 
 <script>
 const donateMessages=[
@@ -373,6 +387,8 @@ sceneNames.classList.add("hidden");
 game.classList.remove("hidden");
 container.classList.remove("hasMode");
 output.innerHTML="";
+const preview=document.getElementById("screenshotPreview");
+if(preview) preview.classList.add("hidden");
 const mode=modeSelect.value,n=parseInt(playersSel.value,10);
 
 /* Context 1 and 2 */
@@ -461,6 +477,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
