@@ -38,15 +38,6 @@ button:disabled{opacity:.4;cursor:not-allowed;}
 .methodRow{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:10px;}
 .methodRow label{font-size:13px;opacity:.9;display:flex;align-items:center;gap:6px;background:#1f2a44;border-radius:8px;padding:8px 10px;}
 .methodRow input{margin-top:0;padding:0;}
-@media (max-width:600px){
-.container{padding:20px;}
-.container.hasMode{padding-top:80px;}
-.minuteWrap{width:80px;}
-button.primary{font-size:16px;}
-.overrideWrap{font-size:11px;}
-.groupCooldownRow{flex-direction:column;align-items:center;}
-.methodRow label{font-size:12px;padding:8px 9px;}
-}
 </style>
 </head>
 <body>
@@ -83,46 +74,28 @@ button.primary{font-size:16px;}
     </div>
 
     <button class="primary" id="nextBtn">Let's F*cking Go</button>
- 
 
-<div class="section">
-  <strong>Quick Rules</strong>
-  <div class="rules" style="text-align:left;">
-     <span style="display:block; margin-bottom:0.5em;">
-    • Choose a party leader.<br>
-    &nbsp;&nbsp;They control the rules and can assign extra drinks if someone skips one.<br>
-     </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Play one game per roll.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Follow only the drinking methods you enable above.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • If multiple rules trigger at once, stack them.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Group cooldown pauses ALL group drinks only.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Finish Drink if under half full, otherwise drink half.
-    </span>
-    <span style="display:block;">
-      • Don’t force anyone to do more than they’re willing to, it’s not a marriage in the 80s.
-    </span>
+    <div class="section">
+      <strong>Quick Rules</strong>
+      <div class="rules" style="text-align:left;">
+        <span style="display:block;margin-bottom:.5em;">
+          • Choose a party leader.<br>
+          &nbsp;&nbsp;They control the rules and can assign extra drinks if someone skips one.
+        </span>
+        <span style="display:block;margin-bottom:.5em;">• Play one game per roll.</span>
+        <span style="display:block;margin-bottom:.5em;">• Follow only the drinking methods you enable above.</span>
+        <span style="display:block;margin-bottom:.5em;">• If multiple rules trigger at once, stack them.</span>
+        <span style="display:block;margin-bottom:.5em;">• Group cooldown pauses ALL group drinks only.</span>
+        <span style="display:block;margin-bottom:.5em;">• Finish Drink if under half full, otherwise drink half.</span>
+        <span style="display:block;">• Don’t force anyone to do more than they’re willing to, it’s not a marriage in the 80s.</span>
+      </div>
+    </div>
   </div>
-</div>
-     </div>
-
 
   <div id="sceneNames" class="hidden">
     <div class="section"><strong>Player Names</strong></div>
     <div class="nameInputs">
-      <input id="name1" placeholder="Player 1 name">
-      <input id="name2" placeholder="Player 2 name">
-      <input id="name3" placeholder="Player 3 name">
-      <input id="name4" placeholder="Player 4 name">
-      <input id="name5" placeholder="Player 5 name">
+      <input id="name1"><input id="name2"><input id="name3"><input id="name4"><input id="name5">
     </div>
     <button class="primary" id="generateBtn">Generate</button>
   </div>
@@ -131,301 +104,33 @@ button.primary{font-size:16px;}
     <div id="output"></div>
     <div class="controls">
       <button id="nextGameBtn">Next Game No Changes</button>
+      <button id="screenshotBtn">Screenshot This Game</button>
       <button id="startOverBtn">Start Over</button>
     </div>
   </div>
 </div>
 
 <div id="uiAnchor">Made by MCoyle 2026 • V4 for Desktop, IPhone & Android</div>
-<div id="disclaimer">
-  Please drink responsibly. Intended for adults of legal drinking age. Do not drink and drive. Follow local laws.
-</div>
+<div id="disclaimer">Please drink responsibly. Intended for adults of legal drinking age.</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-const donateMessages=[
-"One dollar a month keeps this alive",
-"If everyone chipped in a dollar this gets better fast",
-"You never have to donate, thanks for being here",
-"Gratitude keeps this going, money is one way",
-"A dollar helps more than you think",
-"This exists because people value it",
-"If this helped, thank you",
-"No obligation, just appreciation",
-"I will keep improving this as long as it is wanted",
-"Support turns side projects into better tools",
-"Even tiny support compounds",
-"This stays free, support helps it grow",
-"I build these because I enjoy it",
-"A dollar today means more tomorrow",
-"Thanks for being part of this"
-];
-
-document.getElementById("donateLink").onclick=()=>{
-  const msg=donateMessages[Math.floor(Math.random()*donateMessages.length)];
-  const base="https://www.paypal.com/donate/?business=NDJVUGBG9A6UL&no_recurring=0&currency_code=AUD";
-  document.getElementById("donateLink").href=base+"&item_name="+encodeURIComponent(msg);
-};
-
-const container=document.getElementById("container");
-const scenePlayers=document.getElementById("scenePlayers");
-const sceneNames=document.getElementById("sceneNames");
-const game=document.getElementById("game");
-const modeSelect=document.getElementById("modeSelect");
-const modeTitle=document.getElementById("modeTitle");
-const modeWrap=document.getElementById("modeWrap");
-const playersSel=document.getElementById("players");
-const output=document.getElementById("output");
-
-const nextBtn=document.getElementById("nextBtn");
-const generateBtn=document.getElementById("generateBtn");
-const nextGameBtn=document.getElementById("nextGameBtn");
-const startOverBtn=document.getElementById("startOverBtn");
-
-const classesList=["Assassin","Fighter","Juggernaut","Mage","Marksman","ADC","Support","Enchanter","Tank","Bruiser","Slayer"];
-const allAugments=["Jeweled Gauntlet","Scoped Weapons","Earthwake","Bread And Butter","Executioner","Mad Scientist","Infernal Conduit","Ultimate Revolution"];
-const rareUniversalAugments=["Raid Boss","Ultimate Revolution","Phenomenal Evil","Ocean Soul","Scoped Weapons II","Earthwake"];
-const drinkRules=["Drink if you miss a snowball","Drink if you flash offensively"];
-const shotRules=["Shot if you die going in alone","Shot if you snowball in and immediately die"];
-const universalShotRules=[
-"EVERYONE SHOTS if a pentakill is given, not stolen",
-"EVERYONE SHOTS if a game ends before 12 minutes",
-"EVERYONE SHOTS if a surrender vote is started and cancelled",
-"EVERYONE SHOTS if a backdoor attempt succeeds",
-"EVERYONE SHOTS if first turret falls before 5 minutes",
-"EVERYONE SHOTS if first inhibitor falls before 10 minutes",
-"EVERYONE SHOTS if a player finishes the game with 100% kill participation",
-"EVERYONE SHOTS if a pentakill occurs with no deaths on the killer’s team",
-"EVERYONE SHOTS if the game ends immediately after an ace",
-"EVERYONE SHOTS if a player achieves a pentakill without using any summoner spells",
-"EVERYONE SHOTS if a player gets a pentakill while under an enemy turret",
-"EVERYONE SHOTS if an ace occurs where all five kills are assisted by the same teammate",
-"EVERYONE SHOTS if a player finishes the game with zero deaths and at least ten kills",
-"EVERYONE SHOTS if a team wins while never activating a single Hexgate"
-];
-const champions=["Ahri","Lux","Garen","Miss Fortune","Thresh","Darius","Ezreal","Annie","Leona","Yasuo"];
-
-function pick(a){return a[Math.floor(Math.random()*a.length)];}
-function pickUnique(a,n){const c=a.slice(),o=[];for(let i=0;i<n;i++)o.push(c.splice(Math.floor(Math.random()*c.length),1)[0]);return o;}
-function nameOf(i){return document.getElementById("name"+i).value.trim()||("Player "+i);}
-
-let savedMinutes=10,savedOverride=false;
-let cooldown=false;
-
-modeSelect.onchange=()=>{
-  modeTitle.textContent=modeSelect.value=="normal"
-  ?"Dr Druids Drunk ARAM Normal"
-  :"Dr Druids Drunk ARAM Mayhem";
-};
-
-/* METHODS STATE */
-const methodChks=[...document.querySelectorAll(".methodChk")];
-
-function enforceAtLeastOne(keepTarget){
-  const enabled=methodChks.filter(x=>x.checked);
-  if(enabled.length) return;
-  (keepTarget||methodChks[0]).checked=true;
+const screenshotBtn=document.getElementById("screenshotBtn");
+if(screenshotBtn){
+  screenshotBtn.onclick=async()=>{
+    const canvas=await html2canvas(document.getElementById("output"),{
+      backgroundColor:"#141c2f",
+      scale:2
+    });
+    canvas.toBlob(async blob=>{
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob })
+      ]);
+    });
+  };
 }
-methodChks.forEach(chk=>chk.addEventListener("change",()=>enforceAtLeastOne(chk)));
-
-function getEnabledMethods(){
-  const enabled=methodChks.filter(x=>x.checked).map(x=>x.value);
-  return enabled.length?enabled:["drink"];
-}
-
-function pickFrom(list){return list[Math.floor(Math.random()*list.length)];}
-
-/* WEIGHTED CONTEXTS */
-const FULL_PRIORITY=[["shot","finish"],["skull"],["drink"]];
-
-function pickPriority(order){
-  const enabled=getEnabledMethods();
-  for(const tier of order){
-    const hit=enabled.filter(x=>tier.includes(x));
-    if(hit.length) return pickFrom(hit);
-  }
-  return "drink";
-}
-
-/* Context 1 and 2 and 4, Shot or Finish drink preferred, then Skull, then Drink */
-function pickFullKey(){ return pickPriority(FULL_PRIORITY); }
-
-/* Context 3, prefer Skull or Drink, only use Shot or Finish if those are the only enabled options */
-function pickGameKey(){
-  const enabled=getEnabledMethods();
-  const soft=enabled.filter(x=>x==="skull"||x==="drink");
-  if(soft.length) return pickFrom(soft);
-  const hard=enabled.filter(x=>x==="shot"||x==="finish");
-  if(hard.length) return pickFrom(hard);
-  return "drink";
-}
-
-/* Phrases */
-function phraseRollMayhem(k){
-  if(k==="shot") return "Takes a shot";
-  if(k==="finish") return "Finishes drink";
-  if(k==="skull") return "Skulls";
-  return "Drinks";
-}
-function phraseRollNormal(k){
-  if(k==="shot") return "Shots";
-  if(k==="finish") return "Finishes drink";
-  if(k==="skull") return "Skulls";
-  return "Drinks";
-}
-function everyonePrefix(k){
-  if(k==="shot") return "EVERYONE SHOTS";
-  if(k==="finish") return "EVERYONE FINISHES DRINK";
-  if(k==="skull") return "EVERYONE SKULLS";
-  return "EVERYONE DRINKS";
-}
-function leadingWord(k){
-  if(k==="shot") return "Shot";
-  if(k==="finish") return "Finish drink";
-  if(k==="skull") return "Skull";
-  return "Drink";
-}
-
-/* Safe swaps */
-function swapLeadingWord(line,newWord){
-  const i=line.indexOf(" ");
-  if(i===-1) return newWord;
-  return newWord+line.slice(i);
-}
-function swapUniversalEveryone(line,newPrefix){
-  return line.replace(/^EVERYONE SHOTS/i,newPrefix);
-}
-
-function toNames(){
-scenePlayers.classList.add("hidden");
-sceneNames.classList.remove("hidden");
-modeWrap.classList.add("hidden");
-container.classList.remove("hasMode");
-const n=parseInt(playersSel.value,10);
-for(let i=1;i<=5;i++)document.getElementById("name"+i).disabled=i>n;
-}
-
-function enforceMin(input,override){
-let v=parseInt(input.value,10);
-if(isNaN(v))v=override.checked?1:3;
-if(override.checked&&v<1)v=1;
-if(!override.checked&&v<3)v=3;
-input.value=v;
-savedMinutes=v;
-savedOverride=override.checked;
-}
-
-function startCooldown(btn,input,override){
-if(cooldown)return;
-enforceMin(input,override);
-const minutes=parseInt(input.value,10);
-cooldown=true;
-btn.disabled=true;
-btn.closest(".groupCooldown").querySelectorAll(".rules").forEach(r=>r.classList.add("blur"));
-setTimeout(()=>{
-btn.closest(".groupCooldown").querySelectorAll(".rules").forEach(r=>r.classList.remove("blur"));
-btn.disabled=false;
-cooldown=false;
-},minutes*60000);
-}
-
-function generate(persist=false){
-scenePlayers.classList.add("hidden");
-sceneNames.classList.add("hidden");
-game.classList.remove("hidden");
-container.classList.remove("hasMode");
-output.innerHTML="";
-const mode=modeSelect.value,n=parseInt(playersSel.value,10);
-
-/* Context 1 and 2 */
-if(mode=="mayhem"){
-const used=[];
-for(let i=1;i<=n;i++){
-let a;do{a=pick(allAugments)}while(used.includes(a));
-used.push(a);
-const k=pickFullKey();
-output.innerHTML+=`<div class="player">${nameOf(i)} ${phraseRollMayhem(k)} if they roll: ${a} (at any point)</div>`;
-}
-const ek=pickFullKey();
-output.innerHTML+=`<div class="universal">${everyonePrefix(ek)} IF ANYONE ROLLED<br>
-<br>${pick(rareUniversalAugments)}</div>`;
-}
-
-if(mode=="normal"){
-for(let i=1;i<=n;i++){
-const k=pickFullKey();
-output.innerHTML+=`<div class="player">${nameOf(i)} ${phraseRollNormal(k)} if they rolled: ${pick(classesList)}</div>`;
-}
-const ek=pickFullKey();
-output.innerHTML+=`<div class="champion">${everyonePrefix(ek)} IF ANYONE ROLLED<br>
-<br>${pick(champions)}</div>`;
-}
-
-/* Context 3 */
-const drRaw=pickUnique(drinkRules,2);
-const srRaw=pick(shotRules);
-
-/* drinkRules and shotRules use the Context 3 selection */
-const k3a=pickGameKey();
-const k3b=pickGameKey();
-const k3c=pickGameKey();
-
-const dr0=swapLeadingWord(drRaw[0],leadingWord(k3a));
-const dr1=swapLeadingWord(drRaw[1],leadingWord(k3b));
-const sr =swapLeadingWord(srRaw ,leadingWord(k3c));
-
-/* Context 4 */
-const urRaw=pick(universalShotRules);
-const k4=pickFullKey();
-const ur=swapUniversalEveryone(urRaw,everyonePrefix(k4));
-
-output.innerHTML+=`<div class='section'><strong>For This Game</strong></div>`;
-output.innerHTML+=`<div class="rules">${dr0}</div><div class="rules">${dr1}</div><div class="rules">${sr}</div>`;
-
-output.innerHTML+=`
-<div class="groupCooldown">
-<div class="groupCooldownRow">
-<button class="cooldownBtn" onclick="
-const s=this.nextElementSibling;
-startCooldown(this,s.querySelector('.minuteWrap input'),s.querySelector('.overrideWrap input'))">
-We F*cked up!!<br>(Group Drink Cooldown)
-</button>
-<div class="cooldownStack">
-<div class="minuteWrap">
-<input type="number" value="${persist?savedMinutes:10}"
-oninput="enforceMin(this,this.closest('.cooldownStack').querySelector('.overrideWrap input'))">
-<span>minutes</span>
-</div>
-<div class="overrideWrap">
-<input type="checkbox" ${persist&&savedOverride?"checked":""}
-onchange="enforceMin(this.closest('.cooldownStack').querySelector('.minuteWrap input'),this)">
-<label>Minimum 3 unless checked</label>
-</div>
-</div>
-</div>
-<div class="rules">${ur}</div>
-</div>`;
-}
-
-function startOver(){
-game.classList.add("hidden");
-scenePlayers.classList.remove("hidden");
-modeWrap.classList.remove("hidden");
-container.classList.add("hasMode");
-output.innerHTML="";
-}
-
-nextBtn.onclick=toNames;
-generateBtn.onclick=()=>generate(false);
-nextGameBtn.onclick=()=>generate(true);
-startOverBtn.onclick=startOver;
 </script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
