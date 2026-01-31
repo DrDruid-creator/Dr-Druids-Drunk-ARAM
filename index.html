@@ -142,7 +142,7 @@ button.primary{font-size:16px;}
     <div id="output"></div>
 
 <button class="copyBtn" type="button"
-onclick="copyRulesScreenshot().then(()=>this.textContent='Copied!')">
+onclick="this.textContent='Copying…'; copyRulesScreenshot().finally(()=>this.textContent='Copied')">
 Copy Rules Screenshot
 </button>
 
@@ -456,3 +456,4 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
