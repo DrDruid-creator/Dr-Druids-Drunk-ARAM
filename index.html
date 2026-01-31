@@ -166,7 +166,13 @@ async function copyRulesScreenshot(){
   const target=document.getElementById("shareCapture");
   if(!preview || !target) return;
 
-  const canvas=await html2canvas(target,{backgroundColor:"#141c2f",scale:2});
+ const canvas=await html2canvas(target,{
+  backgroundColor:"#141c2f",
+  scale:2,
+  useCORS:true,
+  allowTaint:true
+});
+
 
   let url=null;
 
@@ -475,6 +481,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
