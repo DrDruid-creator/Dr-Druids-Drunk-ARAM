@@ -191,15 +191,17 @@ async function copyRulesText(btn){
   // Only the per-game rules
   root.querySelectorAll(".rules").forEach(el=>{
     const t=el.innerText.trim();
-    if(
-      t.startsWith("Drink") ||
-      t.startsWith("Shot") ||
-      t.startsWith("Skull") ||
-      t.startsWith("Finish") ||
-      t.startsWith("EVERYONE")
-    ){
-      lines.push(t);
-    }
+if(t.startsWith("EVERYONE")){
+  lines.push("");
+  lines.push(t);
+}else if(
+  t.startsWith("Drink") ||
+  t.startsWith("Shot") ||
+  t.startsWith("Skull") ||
+  t.startsWith("Finish")
+){
+  lines.push(t);
+}
   });
 
   const text=lines.join("\n");
@@ -496,6 +498,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
