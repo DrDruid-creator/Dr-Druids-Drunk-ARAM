@@ -95,38 +95,38 @@ button.primary{font-size:16px;}
 
     <button class="primary" id="nextBtn">Let's F*cking Go</button>
 
-    <div class="section">
-      <strong>Quick Rules</strong>
-    <div class="rules" id="quickRules" style="text-align:left;">
-        <span style="display:block; margin-bottom:0.5em;">
-          • Choose a party leader.<br>
-          &nbsp;&nbsp;They control the rules and can assign extra drinks if someone skips one.<br>
-        </span>
-        <span style="display:block; margin-bottom:0.5em;">
-          • Play one game per roll.
-        </span>
-        <span style="display:block; margin-bottom:0.5em;">
-          • Follow only the drinking methods you enable above.
-        </span>
-        <span style="display:block; margin-bottom:0.5em;">
-          • If multiple rules trigger at once, stack them.
-        </span>
-        <span style="display:block; margin-bottom:0.5em;">
-          • Group cooldown pauses ALL group drinks only.
-        </span>
-        <span style="display:block; margin-bottom:0.5em;">
-          • Finish Drink if under half full, otherwise drink half.
-        </span>
-        <span style="display:block;">
-          • Don’t force anyone to do more than they’re willing to, it’s not a marriage in the 80s.
-        </span>
-<button
-  class="copyBtn"
-  type="button"
-  onclick="copyQuickRules(this)">
-Copy Quick Rules
-</button>
-      </div>
+    <div class="rules" id="quickRules">
+  <strong>Quick Rules</strong>
+
+  <div style="text-align:left; margin-top:8px;">
+    <span style="display:block; margin-bottom:0.5em;">
+      • Choose a party leader.<br>
+      &nbsp;&nbsp;They control the rules and can assign extra drinks if someone skips one.<br>
+    </span>
+    <span style="display:block; margin-bottom:0.5em;">
+      • Play one game per roll.
+    </span>
+    <span style="display:block; margin-bottom:0.5em;">
+      • Follow only the drinking methods you enable above.
+    </span>
+    <span style="display:block; margin-bottom:0.5em;">
+      • If multiple rules trigger at once, stack them.
+    </span>
+    <span style="display:block; margin-bottom:0.5em;">
+      • Group cooldown pauses ALL group drinks only.
+    </span>
+    <span style="display:block; margin-bottom:0.5em;">
+      • Finish Drink if under half full, otherwise drink half.
+    </span>
+    <span style="display:block;">
+      • Don’t force anyone to do more than they’re willing to, it’s not a marriage in the 80s.
+    </span>
+  </div>
+
+  <button class="copyBtn" type="button" onclick="copyQuickRules(this)">
+    Copy Quick Rules
+  </button>
+</div>
     </div>
   </div>
 
@@ -527,6 +527,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
