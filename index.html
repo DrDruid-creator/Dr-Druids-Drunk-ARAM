@@ -171,24 +171,29 @@ async function copyRulesScreenshot(btn){
   const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
   if(!blob) return;
 
-  try{
-    await navigator.clipboard.write([
-      new ClipboardItem({ "image/png": blob })
-    ]);
-    btn.textContent="Copied to clipboard";
-  }catch{
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download="dr-druids-rules.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-    btn.textContent="Clipboard blocked, downloaded instead";
+  if(navigator.clipboard && window.ClipboardItem){
+    try{
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob })
+      ]);
+      btn.textContent="Copied (or use Paste)";
+    }catch{}
   }
+
+  // ALWAYS provide fallback
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="dr-druids-rules.png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  btn.textContent="Downloaded (clipboard may be blocked)";
 }
 </script>
+
 
 
 
@@ -474,5 +479,6 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
