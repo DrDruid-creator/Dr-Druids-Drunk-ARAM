@@ -295,46 +295,43 @@ const classesList=["Assassin","Fighter","Juggernaut","Mage","Marksman","ADC","Su
 const allAugments=["Jeweled Gauntlet","Scoped Weapons","Earthwake","Bread And Butter","Executioner","Mad Scientist","Infernal Conduit","Ultimate Revolution"];
 const rareUniversalAugments=["Raid Boss","Ultimate Revolution","Phenomenal Evil","Ocean Soul","Scoped Weapons II","Earthwake"];
 const baseTriggers = [
-  "miss your ultimate entirely, no enemy champions hit",
-  "use your ultimate and hit zero enemy champions",
-  "die while flash is available and unused",
-  "die while your ultimate is available and unused",
-  "dive an enemy turret and die",
-  "take enemy turret aggro first and die",
-  "re-engage within 5 seconds of respawning and die",
+  "if your ultimate hits zero enemy champions",
+  "if you die with flash available (not on cooldown)",
+  "if you die with your ultimate available (not on cooldown)",
+  "if you dive an enemy turret and die",
+  "if you take enemy turret aggro first and die",
+  "if you re-engage within 5 seconds of respawning and die",
 
-  "miss a snowball completely",
-  "snowball a minion instead of a champion",
-  "snowball onto a tank and die",
-  "snowball backwards, even if it saves you",
-  "snowball into a fight where your team is outnumbered",
-  "snowball in while below 50 percent health and die",
+  "if you miss a snowball completely",
+  "if you snowball a minion instead of a champion",
+  "if you snowball onto a tank and die",
+  "if you snowball backwards (even if it helps)",
+  "if you snowball into a fight where your team is outnumbered",
+  "if you snowball in below 50 percent health and die",
 
-  "die alone past the enemy’s first outer turret",
-  "facecheck a bush alone and die",
-  "die alone while clearing a minion wave",
-  "die under an enemy turret without allied minions present",
+  "if you die alone past the enemy’s first outer turret (no teammates nearby)",
+  "if you facecheck a bush alone and die",
+  "if you die under an enemy turret without allied minions",
 
-  "be the first death in a teamfight",
-  "be the last death in a teamfight",
-  "survive a teamfight with under 10 percent health",
-  "ace the enemy team and still die",
+  "if you are the first death in a teamfight",
+  "if you are the last death in a teamfight",
+  "if you survive a teamfight with under 10 percent health",
+  "if you ace the enemy team and still die",
 
-  "die while contesting a health relic",
-  "miss a health relic and die shortly after",
-  "take a health relic while a nearby teammate dies",
-  "die defending your inhibitor",
-  "die while attacking the enemy inhibitor",
+  "if you die contesting a health relic",
+  "if you miss a health relic and die shortly after",
+  "if you take a health relic while a nearby teammate dies",
+  "if you die defending your inhibitor",
+  "if you die attacking the enemy inhibitor",
 
-  "misclick flash",
-  "fat-finger the wrong summoner spell",
-  "accidentally cancel your own channeled ability",
-  "miss a point-blank skillshot",
-  "emote immediately before dying",
-  "dance immediately before dying",
-  "type in chat instead of moving and die",
-  "get executed by an enemy turret",
-  "get executed by minions"
+  "if you misclick flash",
+  "if you fat-finger the wrong summoner spell",
+  "if you accidentally cancel your own channeled ability",
+  "if you miss a point-blank skillshot (melee or very close range)",
+  "if you emote or dance immediately before dying",
+  "if you type in chat instead of moving and die",
+  "if you get executed by an enemy turret (no champion damage)",
+  "if you get executed by minions (no champion damage)"
 ];
 
 const universalShotRules=[
@@ -564,3 +561,4 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
