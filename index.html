@@ -166,14 +166,20 @@ async function copyRulesScreenshot(){
   const preview=document.getElementById("screenshotPreview");
   if(!target || typeof html2canvas!=="function") return;
 
- const canvas=await html2canvas(target,{
-  backgroundColor:"#141c2f",
-  scale:2
-});
+  // force layout to settle
+  await new Promise(r=>requestAnimationFrame(r));
+
+  const canvas=await html2canvas(target,{
+    backgroundColor:"#141c2f",
+    scale:2,
+    removeContainer:true
+  });
+
+  if(!canvas.width || !canvas.height) return;
 
   const url=canvas.toDataURL("image/png");
 
-  preview.innerHTML = `
+  preview.innerHTML=`
     <img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px;">
     <br>
     <a href="${url}" download="dr-druids-rules.png">
@@ -184,14 +190,6 @@ async function copyRulesScreenshot(){
 }
 </script>
 
-  <script>
-function clearScreenshotPreview(){
-  const preview=document.getElementById("screenshotPreview");
-  if(!preview) return;
-  preview.innerHTML="";
-  preview.classList.add("hidden");
-}
-</script>
 
 
 <script>
@@ -477,6 +475,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
