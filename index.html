@@ -96,7 +96,7 @@ button.primary{font-size:16px;}
     <button class="primary" id="nextBtn">Let's F*cking Go</button>
 
     <div class="rules" id="quickRules">
-  <strong>Quick Rules</strong>
+  <strong id="quickRulesTitle">Quick Rules</strong>
 
   <div style="text-align:left; margin-top:8px;">
     <span style="display:block; margin-bottom:0.5em;">
@@ -162,26 +162,31 @@ Copy Rules Text
 <div id="disclaimer">
   Please drink responsibly. Intended for adults of legal drinking age. Do not drink and drive. Follow local laws.
 </div>
+  
 <script>
 async function copyQuickRules(btn){
-  const box = document.getElementById("quickRules");
+  const box=document.getElementById("quickRules");
   if(!box) return;
 
-  const lines = [];
+  const lines=[];
 
+  // title
+  lines.push("Quick Rules","");
+  
+  // rules
   box.querySelectorAll("span").forEach(span=>{
-    const t = span.innerText.replace(/\s+/g," ").trim();
+    const t=span.innerText.replace(/\s+/g," ").trim();
     if(t) lines.push(t);
   });
 
-  const text = lines.join("\n");
+  const text=lines.join("\n");
 
   try{
     await navigator.clipboard.writeText(text);
-    btn.textContent = "Copied";
+    btn.textContent="Copied";
     setTimeout(()=>btn.textContent="Copy Quick Rules",1500);
   }catch{
-    btn.textContent = "Copy failed";
+    btn.textContent="Copy failed";
   }
 }
 </script>
@@ -527,19 +532,3 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
