@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Dr Druids Drunk ARAM Generator</title>
 
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 <style>
 body{font-family:Arial,sans-serif;background:#0b1220;color:#e6e6e6;text-align:center;padding:20px;margin:0;}
 .container{max-width:650px;margin:auto;background:#141c2f;border-radius:12px;padding:20px;position:relative;}
@@ -141,10 +139,9 @@ button.primary{font-size:16px;}
   <div id="game" class="hidden">
     <div id="output"></div>
 
-<button class="copyBtn" type="button" onclick="copyRulesScreenshot()">
-Copy Rules Screenshot
+<button class="copyBtn" type="button" onclick="copyRulesText(this)">
+Copy Rules Text
 </button>
-<div id="screenshotPreview" class="hidden"></div>
 
 
 
@@ -161,39 +158,62 @@ Copy Rules Screenshot
 </div>
 
 <script>
-async function copyRulesScreenshot(){
-  const preview=document.getElementById("screenshotPreview");
-  const target=document.getElementById("shareCapture");
-  if(!preview || !target) return;
+async function copyRulesText(btn){
+  const root=document.getElementById("shareCapture");
+  if(!root) return;
 
- const canvas=await html2canvas(target,{
-  backgroundColor:"#141c2f",
-  scale:2,
-  useCORS:true,
-  allowTaint:true
-});
+  const lines=[];
 
+  // Title
+  lines.push(document.getElementById("modeTitle").innerText.trim());
+  lines.push("");
 
-  let url=null;
+  // Player rules
+  root.querySelectorAll(".player").forEach(el=>{
+    lines.push(el.innerText.trim());
+  });
 
-  const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
-  if(blob){
-    url=URL.createObjectURL(blob);
-  }else{
-    // fallback that always works
-    url=canvas.toDataURL("image/png");
+  lines.push("");
+
+  // Universal / Champion block (split onto two lines)
+  const uni=root.querySelector(".universal,.champion");
+  if(uni){
+    const parts=uni.innerText.split("\n").map(s=>s.trim()).filter(Boolean);
+    lines.push(parts[0]);     // EVERYONE SHOTS IF ANYONE ROLLED
+    if(parts[1]) lines.push(parts[1]); // Phenomenal Evil
+    lines.push("");
   }
 
-  preview.innerHTML=`
-    <img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px;">
-    <br>
-    <a href="${url}" download="dr-druids-rules.png" class="copyBtn" style="text-decoration:none;display:inline-block;">
-      Download Screenshot
-    </a>
-  `;
-  preview.classList.remove("hidden");
+  // For This Game
+  lines.push("For This Game");
+  lines.push("");
+
+  // Only the per-game rules
+  root.querySelectorAll(".rules").forEach(el=>{
+    const t=el.innerText.trim();
+    if(
+      t.startsWith("Drink") ||
+      t.startsWith("Shot") ||
+      t.startsWith("Skull") ||
+      t.startsWith("Finish") ||
+      t.startsWith("EVERYONE")
+    ){
+      lines.push(t);
+    }
+  });
+
+  const text=lines.join("\n");
+
+  try{
+    await navigator.clipboard.writeText(text);
+    btn.textContent="Copied";
+    setTimeout(()=>btn.textContent="Copy Rules Text",1500);
+  }catch{
+    btn.textContent="Copy failed";
+  }
 }
 </script>
+
 
 <script>
 const donateMessages=[
@@ -388,11 +408,6 @@ sceneNames.classList.add("hidden");
 game.classList.remove("hidden");
 container.classList.remove("hasMode");
 output.innerHTML="";
-const preview=document.getElementById("screenshotPreview");
-if(preview){
-  preview.innerHTML="";
-  preview.classList.add("hidden");
-}
 const mode=modeSelect.value,n=parseInt(playersSel.value,10);
 
 /* Context 1 and 2 */
@@ -481,6 +496,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
