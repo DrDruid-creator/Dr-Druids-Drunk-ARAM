@@ -49,6 +49,12 @@ background:#1f2a44;
 opacity:.9;
 }
 
+/* page 2 and 3 visual fix only */
+.stageCard{
+max-width:520px;
+margin:0 auto;
+}
+
 @media (max-width:600px){
 .container{padding:20px;}
 .container.hasMode{padding-top:80px;}
@@ -57,6 +63,7 @@ button.primary{font-size:16px;}
 .overrideWrap{font-size:11px;}
 .groupCooldownRow{flex-direction:column;align-items:center;}
 .methodRow label{font-size:12px;padding:8px 9px;}
+.stageCard{max-width:100%;}
 }
 </style>
 </head>
@@ -96,64 +103,65 @@ button.primary{font-size:16px;}
     <button class="primary" id="nextBtn">Let's F*cking Go</button>
 
     <div class="rules" id="quickRules">
-  <strong id="quickRulesTitle">Quick Rules</strong>
+      <strong id="quickRulesTitle">Quick Rules</strong>
 
-  <div style="text-align:left; margin-top:8px;">
-    <span style="display:block; margin-bottom:0.5em;">
-      • Choose a party leader.<br>
-      &nbsp;&nbsp;They control the rules and can assign extra drinks if someone skips one.<br>
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Play one game per roll.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Follow only the drinking methods you enable above.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • If multiple rules trigger at once, stack them.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Group cooldown pauses ALL group drinks only.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Finish Drink if under half full, otherwise drink half.
-    </span>
-    <span style="display:block;">
-      • Don’t force anyone to do more than they’re willing to, it’s not a marriage in the 80s.
-    </span>
-  </div>
+      <div style="text-align:left; margin-top:8px;">
+        <span style="display:block; margin-bottom:0.5em;">
+          • Choose a party leader.<br>
+          &nbsp;&nbsp;They control the rules and can assign extra drinks if someone skips one.<br>
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • Play one game per roll.
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • Follow only the drinking methods you enable above.
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • If multiple rules trigger at once, stack them.
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • Group cooldown pauses ALL group drinks only.
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • Finish Drink if under half full, otherwise drink half.
+        </span>
+        <span style="display:block;">
+          • Don’t force anyone to do more than they’re willing to, it’s not a marriage in the 80s.
+        </span>
+      </div>
 
-  <button class="copyBtn" type="button" onclick="copyQuickRules(this)">
-    Copy Quick Rules
-  </button>
-</div>
+      <button class="copyBtn" type="button" onclick="copyQuickRules(this)">
+        Copy Quick Rules
+      </button>
     </div>
   </div>
 
   <div id="sceneNames" class="hidden">
-    <div class="section"><strong>Player Names</strong></div>
-    <div class="nameInputs">
-      <input id="name1" placeholder="Player 1 name">
-      <input id="name2" placeholder="Player 2 name">
-      <input id="name3" placeholder="Player 3 name">
-      <input id="name4" placeholder="Player 4 name">
-      <input id="name5" placeholder="Player 5 name">
+    <div class="stageCard">
+      <div class="section"><strong>Player Names</strong></div>
+      <div class="nameInputs">
+        <input id="name1" placeholder="Player 1 name">
+        <input id="name2" placeholder="Player 2 name">
+        <input id="name3" placeholder="Player 3 name">
+        <input id="name4" placeholder="Player 4 name">
+        <input id="name5" placeholder="Player 5 name">
+      </div>
+      <button class="primary" id="generateBtn">Generate</button>
     </div>
-    <button class="primary" id="generateBtn">Generate</button>
   </div>
 
   <div id="game" class="hidden">
-    <div id="output"></div>
+    <div class="stageCard">
+      <div id="output"></div>
 
-<button class="copyBtn" type="button" onclick="copyRulesText(this)">
-Copy Rules Text
-</button>
+      <button class="copyBtn" type="button" onclick="copyRulesText(this)">
+        Copy Rules Text
+      </button>
 
-
-
-    <div class="controls">
-      <button id="nextGameBtn">Next Game No Changes</button>
-      <button id="startOverBtn">Start Over</button>
+      <div class="controls">
+        <button id="nextGameBtn">Next Game No Changes</button>
+        <button id="startOverBtn">Start Over</button>
+      </div>
     </div>
   </div>
 </div>
@@ -170,10 +178,8 @@ async function copyQuickRules(btn){
 
   const lines=[];
 
-  // title
   lines.push("Quick Rules","");
-  
-  // rules
+
   box.querySelectorAll("span").forEach(span=>{
     const t=span.innerText.replace(/\s+/g," ").trim();
     if(t) lines.push(t);
@@ -198,44 +204,39 @@ async function copyRulesText(btn){
 
   const lines=[];
 
-  // Title
   lines.push(document.getElementById("modeTitle").innerText.trim());
   lines.push("");
 
-  // Player rules
   root.querySelectorAll(".player").forEach(el=>{
     lines.push(el.innerText.trim());
   });
 
   lines.push("");
 
-  // Universal / Champion block (split onto two lines)
   const uni=root.querySelector(".universal,.champion");
   if(uni){
     const parts=uni.innerText.split("\n").map(s=>s.trim()).filter(Boolean);
-    lines.push(parts[0]);     // EVERYONE SHOTS IF ANYONE ROLLED
-    if(parts[1]) lines.push(parts[1]); // Phenomenal Evil
+    lines.push(parts[0]);
+    if(parts[1]) lines.push(parts[1]);
     lines.push("");
   }
 
-  // For This Game
   lines.push("For This Game");
   lines.push("");
 
-  // Only the per-game rules
   root.querySelectorAll(".rules").forEach(el=>{
     const t=el.innerText.trim();
-if(t.startsWith("EVERYONE")){
-  lines.push("");
-  lines.push(t);
-}else if(
-  t.startsWith("Drink") ||
-  t.startsWith("Shot") ||
-  t.startsWith("Skull") ||
-  t.startsWith("Finish")
-){
-  lines.push(t);
-}
+    if(t.startsWith("EVERYONE")){
+      lines.push("");
+      lines.push(t);
+    }else if(
+      t.startsWith("Drink") ||
+      t.startsWith("Shot") ||
+      t.startsWith("Skull") ||
+      t.startsWith("Finish")
+    ){
+      lines.push(t);
+    }
   });
 
   const text=lines.join("\n");
@@ -249,7 +250,6 @@ if(t.startsWith("EVERYONE")){
   }
 }
 </script>
-
 
 <script>
 const donateMessages=[
@@ -294,8 +294,49 @@ const startOverBtn=document.getElementById("startOverBtn");
 const classesList=["Assassin","Fighter","Juggernaut","Mage","Marksman","ADC","Support","Enchanter","Tank","Bruiser","Slayer"];
 const allAugments=["Jeweled Gauntlet","Scoped Weapons","Earthwake","Bread And Butter","Executioner","Mad Scientist","Infernal Conduit","Ultimate Revolution"];
 const rareUniversalAugments=["Raid Boss","Ultimate Revolution","Phenomenal Evil","Ocean Soul","Scoped Weapons II","Earthwake"];
-const drinkRules=["Drink if you miss a snowball","Drink if you flash offensively"];
-const shotRules=["Shot if you die going in alone","Shot if you snowball in and immediately die"];
+const baseTriggers = [
+  "miss your ultimate entirely, no enemy champions hit",
+  "use your ultimate and hit zero enemy champions",
+  "die while flash is available and unused",
+  "die while your ultimate is available and unused",
+  "dive an enemy turret and die",
+  "take enemy turret aggro first and die",
+  "re-engage within 5 seconds of respawning and die",
+
+  "miss a snowball completely",
+  "snowball a minion instead of a champion",
+  "snowball onto a tank and die",
+  "snowball backwards, even if it saves you",
+  "snowball into a fight where your team is outnumbered",
+  "snowball in while below 50 percent health and die",
+
+  "die alone past the enemy’s first outer turret",
+  "facecheck a bush alone and die",
+  "die alone while clearing a minion wave",
+  "die under an enemy turret without allied minions present",
+
+  "be the first death in a teamfight",
+  "be the last death in a teamfight",
+  "survive a teamfight with under 10 percent health",
+  "ace the enemy team and still die",
+
+  "die while contesting a health relic",
+  "miss a health relic and die shortly after",
+  "take a health relic while a nearby teammate dies",
+  "die defending your inhibitor",
+  "die while attacking the enemy inhibitor",
+
+  "misclick flash",
+  "fat-finger the wrong summoner spell",
+  "accidentally cancel your own channeled ability",
+  "miss a point-blank skillshot",
+  "emote immediately before dying",
+  "dance immediately before dying",
+  "type in chat instead of moving and die",
+  "get executed by an enemy turret",
+  "get executed by minions"
+];
+
 const universalShotRules=[
 "EVERYONE SHOTS if a pentakill is given, not stolen",
 "EVERYONE SHOTS if a game ends before 12 minutes",
@@ -327,7 +368,6 @@ modeSelect.onchange=()=>{
   :"Dr Druids Drunk ARAM Mayhem";
 };
 
-/* METHODS STATE */
 const methodChks=[...document.querySelectorAll(".methodChk")];
 
 function enforceAtLeastOne(keepTarget){
@@ -344,7 +384,6 @@ function getEnabledMethods(){
 
 function pickFrom(list){return list[Math.floor(Math.random()*list.length)];}
 
-/* WEIGHTED CONTEXTS */
 const FULL_PRIORITY=[["shot","finish"],["skull"],["drink"]];
 
 function pickPriority(order){
@@ -356,10 +395,8 @@ function pickPriority(order){
   return "drink";
 }
 
-/* Context 1 and 2 and 4, Shot or Finish drink preferred, then Skull, then Drink */
 function pickFullKey(){ return pickPriority(FULL_PRIORITY); }
 
-/* Context 3, prefer Skull or Drink, only use Shot or Finish if those are the only enabled options */
 function pickGameKey(){
   const enabled=getEnabledMethods();
   const soft=enabled.filter(x=>x==="skull"||x==="drink");
@@ -369,7 +406,6 @@ function pickGameKey(){
   return "drink";
 }
 
-/* Phrases */
 function phraseRollMayhem(k){
   if(k==="shot") return "Takes a shot";
   if(k==="finish") return "Finishes drink";
@@ -395,7 +431,6 @@ function leadingWord(k){
   return "Drink";
 }
 
-/* Safe swaps */
 function swapLeadingWord(line,newWord){
   const i=line.indexOf(" ");
   if(i===-1) return newWord;
@@ -446,7 +481,6 @@ container.classList.remove("hasMode");
 output.innerHTML="";
 const mode=modeSelect.value,n=parseInt(playersSel.value,10);
 
-/* Context 1 and 2 */
 if(mode=="mayhem"){
 const used=[];
 for(let i=1;i<=n;i++){
@@ -470,9 +504,8 @@ output.innerHTML+=`<div class="champion">${everyonePrefix(ek)} IF ANYONE ROLLED<
 <br>${pick(champions)}</div>`;
 }
 
-/* Context 3 */
-const drRaw=pickUnique(drinkRules,2);
-const srRaw=pick(shotRules);
+const drRaw=pickUnique(baseTriggers,2);
+const srRaw=pick(baseTriggers);
 
 const k3a=pickGameKey();
 const k3b=pickGameKey();
@@ -482,7 +515,6 @@ const dr0=swapLeadingWord(drRaw[0],leadingWord(k3a));
 const dr1=swapLeadingWord(drRaw[1],leadingWord(k3b));
 const sr =swapLeadingWord(srRaw ,leadingWord(k3c));
 
-/* Context 4 */
 const urRaw=pick(universalShotRules);
 const k4=pickFullKey();
 const ur=swapUniversalEveryone(urRaw,everyonePrefix(k4));
