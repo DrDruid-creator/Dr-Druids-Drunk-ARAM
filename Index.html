@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dr Druids Drunk ARAM Generator</title>
+<style>
+body{font-family:Arial,sans-serif;background:#0b1220;color:#e6e6e6;text-align:center;padding:20px;margin:0;}
+.container{max-width:650px;margin:auto;background:#141c2f;border-radius:12px;padding:20px;position:relative;}
+.container.hasMode{padding-top:70px;}
+.hidden{display:none;}
+input,select,button{font-size:16px;border-radius:6px;border:none;margin-top:10px;padding:10px;box-sizing:border-box;}
+button{cursor:pointer;font-weight:bold;background:#4c6fff;color:#fff;}
+button.primary{font-size:18px;margin-top:20px;}
+button:disabled{opacity:.4;cursor:not-allowed;}
+.section{margin-top:20px;}
+.player{margin-top:8px;padding:8px;background:#1f2a44;border-radius:6px;}
+.universal,.champion{margin-top:15px;padding:12px;background:#5b1b1b;border-radius:8px;font-weight:bold;color:#ffd6d6;}
+.rules{background:#202b45;padding:10px;border-radius:8px;margin-top:8px;}
+.blur{filter:blur(6px);}
+.groupCooldown{background:#1f2a44;border-radius:8px;padding:14px;margin-top:12px;}
+.groupCooldownRow{display:flex;justify-content:center;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+.cooldownBtn{background:#8b2f2f;font-size:14px;padding:10px 14px;flex-shrink:0;}
+.cooldownStack{display:flex;flex-direction:column;gap:6px;align-items:center;}
+.minuteWrap{display:flex;align-items:center;justify-content:center;background:#0b1220;border-radius:6px;padding:0 10px;width:100px;}
+.minuteWrap input{width:60px;padding:8px;background:transparent;color:#fff;text-align:center;}
+.minuteWrap span{font-size:13px;opacity:.8;margin-left:6px;}
+.overrideWrap{display:flex;align-items:center;gap:6px;font-size:12px;opacity:.85;line-height:1.2;}
+.overrideWrap input[type=checkbox]{vertical-align:middle;margin-top:0;}
+.controls{margin-top:20px;display:grid;gap:10px;}
+#donateAnchor{position:fixed;top:10px;right:12px;font-size:13px;opacity:.9;z-index:9999;background:#1f2a44;padding:6px 10px;border-radius:6px;}
+#donateAnchor a{color:#ffd6d6;text-decoration:none;font-weight:bold;}
+#uiAnchor{position:fixed;bottom:25px;right:10px;font-size:11px;opacity:.55;pointer-events:none;z-index:9999;}
+#disclaimer{position:fixed;bottom:5px;left:50%;transform:translateX(-50%);font-size:10px;color:#cccccc;opacity:.7;text-align:center;max-width:95%;}
+#modeWrap{position:absolute;top:10px;left:12px;font-size:14px;opacity:.9;}
+#modeTitle{margin-top:20px;}
+#sceneNames .nameInputs{display:flex;flex-direction:column;gap:10px;}
+@media (max-width:600px){
+.container{padding:20px;}
+.container.hasMode{padding-top:80px;}
+.minuteWrap{width:80px;}
+button.primary{font-size:16px;}
+.overrideWrap{font-size:11px;}
+.groupCooldownRow{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<div id="donateAnchor">
+  <a id="donateLink" href="#" target="_blank">Enjoy the generator? Donate</a>
+</div>
+
+<div class="container hasMode" id="container">
+  <div id="modeWrap">
+    <select id="modeSelect">
+      <option value="mayhem">Drunk ARAM Mayhem (Patch 26.2)</option>
+      <option value="normal">Drunk ARAM Normal (Patch 26.2)</option>
+    </select>
+  </div>
+
+  <h2 id="modeTitle">Dr Druids Drunk ARAM Mayhem</h2>
+
+  <div id="scenePlayers">
+    <div class="section"><strong>How many players?</strong><br>
+      <select id="players">
+        <option value="1">1</option><option value="2">2</option>
+        <option value="3">3</option><option value="4">4</option>
+        <option value="5" selected>5</option>
+      </select>
+    </div>
+    <button class="primary" id="nextBtn">Let's F*cking Go</button>
+  </div>
+
+  <div id="sceneNames" class="hidden">
+    <div class="section"><strong>Player Names</strong></div>
+    <div class="nameInputs">
+      <input id="name1" placeholder="Player 1 name">
+      <input id="name2" placeholder="Player 2 name">
+      <input id="name3" placeholder="Player 3 name">
+      <input id="name4" placeholder="Player 4 name">
+      <input id="name5" placeholder="Player 5 name">
+    </div>
+    <button class="primary" id="generateBtn">Generate</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <div id="output"></div>
+    <div class="controls">
+      <button id="nextGameBtn">Next Game No Changes</button>
+      <button id="startOverBtn">Start Over</button>
+    </div>
+  </div>
+</div>
+
+<div id="uiAnchor">Made by MCoyle 2026 • V4 for Desktop, IPhone & Android</div>
+<div id="disclaimer">
+  Please drink responsibly. Intended for adults of legal drinking age. Do not drink and drive. Follow local laws.
+</div>
+
+<script>
+const donateMessages=[
+"One dollar a month keeps this alive",
+"If everyone chipped in a dollar this gets better fast",
+"You never have to donate, thanks for being here",
+"Gratitude keeps this going, money is one way",
+"A dollar helps more than you think",
+"This exists because people value it",
+"If this helped, thank you",
+"No obligation, just appreciation",
+"I will keep improving this as long as it is wanted",
+"Support turns side projects into better tools",
+"Even tiny support compounds",
+"This stays free, support helps it grow",
+"I build these because I enjoy it",
+"A dollar today means more tomorrow",
+"Thanks for being part of this"
+];
+
+document.getElementById("donateLink").onclick=()=>{
+  const msg=donateMessages[Math.floor(Math.random()*donateMessages.length)];
+  const base="https://www.paypal.com/donate/?business=NDJVUGBG9A6UL&no_recurring=0&currency_code=AUD";
+  document.getElementById("donateLink").href=base+"&item_name="+encodeURIComponent(msg);
+};
+
+const container=document.getElementById("container");
+const scenePlayers=document.getElementById("scenePlayers");
+const sceneNames=document.getElementById("sceneNames");
+const game=document.getElementById("game");
+const modeSelect=document.getElementById("modeSelect");
+const modeTitle=document.getElementById("modeTitle");
+const modeWrap=document.getElementById("modeWrap");
+const playersSel=document.getElementById("players");
+const output=document.getElementById("output");
+
+const nextBtn=document.getElementById("nextBtn");
+const generateBtn=document.getElementById("generateBtn");
+const nextGameBtn=document.getElementById("nextGameBtn");
+const startOverBtn=document.getElementById("startOverBtn");
+
+const classesList=["Assassin","Fighter","Juggernaut","Mage","Marksman","ADC","Support","Enchanter","Tank","Bruiser","Slayer"];
+const allAugments=["Jeweled Gauntlet","Scoped Weapons","Earthwake","Bread And Butter","Executioner","Mad Scientist","Infernal Conduit","Ultimate Revolution"];
+const rareUniversalAugments=["Raid Boss","Ultimate Revolution","Phenomenal Evil","Ocean Soul","Scoped Weapons II","Earthwake"];
+const drinkRules=["Drink if you miss a snowball","Drink if you flash offensively"];
+const shotRules=["Shot if you die going in alone","Shot if you snowball in and immediately die"];
+const universalShotRules=[
+"EVERYONE SHOTS if a pentakill is given, not stolen",
+"EVERYONE SHOTS if a game ends before 12 minutes",
+"EVERYONE SHOTS if a surrender vote is started and cancelled",
+"EVERYONE SHOTS if a backdoor attempt succeeds",
+"EVERYONE SHOTS if first turret falls before 5 minutes",
+"EVERYONE SHOTS if first inhibitor falls before 10 minutes",
+"EVERYONE SHOTS if a player finishes the game with 100% kill participation",
+"EVERYONE SHOTS if a pentakill occurs with no deaths on the killer’s team",
+"EVERYONE SHOTS if the game ends immediately after an ace",
+"EVERYONE SHOTS if a player achieves a pentakill without using any summoner spells",
+"EVERYONE SHOTS if a player gets a pentakill while under an enemy turret",
+"EVERYONE SHOTS if an ace occurs where all five kills are assisted by the same teammate",
+"EVERYONE SHOTS if a player finishes the game with zero deaths and at least ten kills",
+"EVERYONE SHOTS if a team wins while never activating a single Hexgate"
+];
+const champions=["Ahri","Lux","Garen","Miss Fortune","Thresh","Darius","Ezreal","Annie","Leona","Yasuo"];
+
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function pickUnique(a,n){const c=a.slice(),o=[];for(let i=0;i<n;i++)o.push(c.splice(Math.floor(Math.random()*c.length),1)[0]);return o;}
+function nameOf(i){return document.getElementById("name"+i).value.trim()||("Player "+i);}
+
+let savedMinutes=10,savedOverride=false;
+let cooldown=false;
+
+modeSelect.onchange=()=>{
+  modeTitle.textContent=modeSelect.value=="normal"
+  ?"Dr Druids Drunk ARAM Normal"
+  :"Dr Druids Drunk ARAM Mayhem";
+};
+
+function toNames(){
+scenePlayers.classList.add("hidden");
+sceneNames.classList.remove("hidden");
+modeWrap.classList.add("hidden");
+container.classList.remove("hasMode");
+const n=parseInt(playersSel.value,10);
+for(let i=1;i<=5;i++)document.getElementById("name"+i).disabled=i>n;
+}
+
+function enforceMin(input,override){
+let v=parseInt(input.value,10);
+if(isNaN(v))v=override.checked?1:3;
+if(override.checked&&v<1)v=1;
+if(!override.checked&&v<3)v=3;
+input.value=v;
+savedMinutes=v;
+savedOverride=override.checked;
+}
+
+function startCooldown(btn,input,override){
+if(cooldown)return;
+enforceMin(input,override);
+const minutes=parseInt(input.value,10);
+cooldown=true;
+btn.disabled=true;
+btn.closest(".groupCooldown").querySelectorAll(".rules").forEach(r=>r.classList.add("blur"));
+setTimeout(()=>{
+btn.closest(".groupCooldown").querySelectorAll(".rules").forEach(r=>r.classList.remove("blur"));
+btn.disabled=false;
+cooldown=false;
+},minutes*60000);
+}
+
+function generate(persist=false){
+scenePlayers.classList.add("hidden");
+sceneNames.classList.add("hidden");
+game.classList.remove("hidden");
+container.classList.remove("hasMode");
+output.innerHTML="";
+const mode=modeSelect.value,n=parseInt(playersSel.value,10);
+
+if(mode=="mayhem"){
+const used=[];
+for(let i=1;i<=n;i++){
+let a;do{a=pick(allAugments)}while(used.includes(a));
+used.push(a);
+output.innerHTML+=`<div class="player">${nameOf(i)} Takes a shot if they roll: ${a} (at any point)</div>`;
+}
+output.innerHTML+=`<div class="universal">EVERYONE TAKES A SHOT IF ANYONE ROLLED<br>
+<br>${pick(rareUniversalAugments)}</div>`;
+}
+
+if(mode=="normal"){
+for(let i=1;i<=n;i++)
+output.innerHTML+=`<div class="player">${nameOf(i)} Shots if they rolled: ${pick(classesList)}</div>`;
+output.innerHTML+=`<div class="champion">EVERYONE DOES A SHOT IF ANYONE ROLLED<br>
+<br>${pick(champions)}</div>`;
+}
+
+const dr=pickUnique(drinkRules,2),sr=pick(shotRules),ur=pick(universalShotRules);
+output.innerHTML+=`<div class='section'><strong>For This Game</strong></div>`;
+output.innerHTML+=`<div class="rules">${dr[0]}</div><div class="rules">${dr[1]}</div><div class="rules">${sr}</div>`;
+
+output.innerHTML+=`
+<div class="groupCooldown">
+<div class="groupCooldownRow">
+<button class="cooldownBtn" onclick="
+const s=this.nextElementSibling;
+startCooldown(this,s.querySelector('.minuteWrap input'),s.querySelector('.overrideWrap input'))">
+We F*cked up!!<br>(Group Shot Cooldown)
+</button>
+<div class="cooldownStack">
+<div class="minuteWrap">
+<input type="number" value="${persist?savedMinutes:10}"
+oninput="enforceMin(this,this.closest('.cooldownStack').querySelector('.overrideWrap input'))">
+<span>minutes</span>
+</div>
+<div class="overrideWrap">
+<input type="checkbox" ${persist&&savedOverride?"checked":""}
+onchange="enforceMin(this.closest('.cooldownStack').querySelector('.minuteWrap input'),this)">
+<label>Minimum 3 unless checked</label>
+</div>
+</div>
+</div>
+<div class="rules">${ur}</div>
+</div>`;
+}
+
+function startOver(){
+game.classList.add("hidden");
+scenePlayers.classList.remove("hidden");
+modeWrap.classList.remove("hidden");
+container.classList.add("hasMode");
+output.innerHTML="";
+}
+
+nextBtn.onclick=toNames;
+generateBtn.onclick=()=>generate(false);
+nextGameBtn.onclick=()=>generate(true);
+startOverBtn.onclick=startOver;
+</script>
+</body>
+</html>
