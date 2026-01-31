@@ -141,10 +141,10 @@ button.primary{font-size:16px;}
   <div id="game" class="hidden">
     <div id="output"></div>
 
-<button class="copyBtn" type="button"
-onclick="copyRulesScreenshot(this)">
+<button class="copyBtn" type="button" onclick="copyRulesScreenshot()">
 Copy Rules Screenshot
 </button>
+<div id="screenshotPreview" class="hidden"></div>
 
 
 
@@ -161,42 +161,24 @@ Copy Rules Screenshot
 </div>
 
 <script>
-async function copyRulesScreenshot(btn){
+async function copyRulesScreenshot(){
   const target=document.getElementById("shareCapture");
+  const preview=document.getElementById("screenshotPreview");
   if(!target || typeof html2canvas!=="function") return;
 
-  btn.textContent="Copying…";
-
   const canvas=await html2canvas(target,{backgroundColor:null,scale:2});
-  const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
-  if(!blob) return;
+  const url=canvas.toDataURL("image/png");
 
-  if(navigator.clipboard && window.ClipboardItem){
-    try{
-      await navigator.clipboard.write([
-        new ClipboardItem({ "image/png": blob })
-      ]);
-      btn.textContent="Copied (or use Paste)";
-    }catch{}
-  }
-
-  // ALWAYS provide fallback
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="dr-druids-rules.png";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-
-  btn.textContent="Downloaded (clipboard may be blocked)";
+  preview.innerHTML = `
+    <img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px;">
+    <br>
+    <a href="${url}" download="dr-druids-rules.png">
+      <button class="copyBtn">Download Screenshot</button>
+    </a>
+  `;
+  preview.classList.remove("hidden");
 }
 </script>
-
-
-
-
 
 <script>
 const donateMessages=[
@@ -479,6 +461,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
