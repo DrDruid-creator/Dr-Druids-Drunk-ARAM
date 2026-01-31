@@ -142,9 +142,10 @@ button.primary{font-size:16px;}
     <div id="output"></div>
 
 <button class="copyBtn" type="button"
-onclick="this.textContent='Copying…'; copyRulesScreenshot().finally(()=>this.textContent='Copied')">
+onclick="copyRulesScreenshot(this)">
 Copy Rules Screenshot
 </button>
+
 
 
     <div class="controls">
@@ -160,18 +161,35 @@ Copy Rules Screenshot
 </div>
 
 <script>
-async function copyRulesScreenshot(){
+async function copyRulesScreenshot(btn){
   const target=document.getElementById("shareCapture");
-  if(!target || !navigator.clipboard || !window.ClipboardItem) return;
+  if(!target || typeof html2canvas!=="function") return;
+
+  btn.textContent="Copying…";
 
   const canvas=await html2canvas(target,{backgroundColor:null,scale:2});
   const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
+  if(!blob) return;
 
-  await navigator.clipboard.write([
-    new ClipboardItem({ "image/png": blob })
-  ]);
+  try{
+    await navigator.clipboard.write([
+      new ClipboardItem({ "image/png": blob })
+    ]);
+    btn.textContent="Copied to clipboard";
+  }catch{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="dr-druids-rules.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    btn.textContent="Clipboard blocked, downloaded instead";
+  }
 }
 </script>
+
 
 
 
@@ -456,4 +474,5 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
