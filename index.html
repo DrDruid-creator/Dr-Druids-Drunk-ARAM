@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Dr Druids Drunk ARAM Generator</title>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <style>
 body{font-family:Arial,sans-serif;background:#0b1220;color:#e6e6e6;text-align:center;padding:20px;margin:0;}
 .container{max-width:650px;margin:auto;background:#141c2f;border-radius:12px;padding:20px;position:relative;}
@@ -27,7 +30,7 @@ button:disabled{opacity:.4;cursor:not-allowed;}
 .minuteWrap span{font-size:13px;opacity:.8;margin-left:6px;}
 .overrideWrap{display:flex;align-items:center;gap:6px;font-size:12px;opacity:.85;line-height:1.2;}
 .overrideWrap input[type=checkbox]{vertical-align:middle;margin-top:0;}
-.controls{margin-top:20px;display:grid;gap:10px;}
+.controls{margin-top:10px;display:grid;gap:10px;}
 #donateAnchor{position:fixed;top:10px;right:12px;font-size:13px;opacity:.9;z-index:9999;background:#1f2a44;padding:6px 10px;border-radius:6px;}
 #donateAnchor a{color:#ffd6d6;text-decoration:none;font-weight:bold;}
 #uiAnchor{position:fixed;bottom:25px;right:10px;font-size:11px;opacity:.55;pointer-events:none;z-index:9999;}
@@ -38,6 +41,16 @@ button:disabled{opacity:.4;cursor:not-allowed;}
 .methodRow{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:10px;}
 .methodRow label{font-size:13px;opacity:.9;display:flex;align-items:center;gap:6px;background:#1f2a44;border-radius:8px;padding:8px 10px;}
 .methodRow input{margin-top:0;padding:0;}
+
+.copyBtn{
+margin:12px 0 6px auto;
+display:block;
+font-size:12px;
+padding:8px 12px;
+background:#1f2a44;
+opacity:.9;
+}
+
 @media (max-width:600px){
 .container{padding:20px;}
 .container.hasMode{padding-top:80px;}
@@ -83,37 +96,35 @@ button.primary{font-size:16px;}
     </div>
 
     <button class="primary" id="nextBtn">Let's F*cking Go</button>
- 
 
-<div class="section">
-  <strong>Quick Rules</strong>
-  <div class="rules" style="text-align:left;">
-     <span style="display:block; margin-bottom:0.5em;">
-    • Choose a party leader.<br>
-    &nbsp;&nbsp;They control the rules and can assign extra drinks if someone skips one.<br>
-     </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Play one game per roll.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Follow only the drinking methods you enable above.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • If multiple rules trigger at once, stack them.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Group cooldown pauses ALL group drinks only.
-    </span>
-    <span style="display:block; margin-bottom:0.5em;">
-      • Finish Drink if under half full, otherwise drink half.
-    </span>
-    <span style="display:block;">
-      • Don’t force anyone to do more than they’re willing to, it’s not a marriage in the 80s.
-    </span>
+    <div class="section">
+      <strong>Quick Rules</strong>
+      <div class="rules" style="text-align:left;">
+        <span style="display:block; margin-bottom:0.5em;">
+          • Choose a party leader.<br>
+          &nbsp;&nbsp;They control the rules and can assign extra drinks if someone skips one.<br>
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • Play one game per roll.
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • Follow only the drinking methods you enable above.
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • If multiple rules trigger at once, stack them.
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • Group cooldown pauses ALL group drinks only.
+        </span>
+        <span style="display:block; margin-bottom:0.5em;">
+          • Finish Drink if under half full, otherwise drink half.
+        </span>
+        <span style="display:block;">
+          • Don’t force anyone to do more than they’re willing to, it’s not a marriage in the 80s.
+        </span>
+      </div>
+    </div>
   </div>
-</div>
-     </div>
-
 
   <div id="sceneNames" class="hidden">
     <div class="section"><strong>Player Names</strong></div>
@@ -129,6 +140,13 @@ button.primary{font-size:16px;}
 
   <div id="game" class="hidden">
     <div id="output"></div>
+
+<button class="copyBtn" type="button"
+onclick="copyRulesScreenshot().then(()=>this.textContent='Copied!')">
+Copy Rules Screenshot
+</button>
+
+
     <div class="controls">
       <button id="nextGameBtn">Next Game No Changes</button>
       <button id="startOverBtn">Start Over</button>
@@ -140,6 +158,22 @@ button.primary{font-size:16px;}
 <div id="disclaimer">
   Please drink responsibly. Intended for adults of legal drinking age. Do not drink and drive. Follow local laws.
 </div>
+
+<script>
+async function copyRulesScreenshot(){
+  const target=document.getElementById("shareCapture");
+  if(!target || !navigator.clipboard || !window.ClipboardItem) return;
+
+  const canvas=await html2canvas(target,{backgroundColor:null,scale:2});
+  const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
+
+  await navigator.clipboard.write([
+    new ClipboardItem({ "image/png": blob })
+  ]);
+}
+</script>
+
+
 
 <script>
 const donateMessages=[
@@ -364,7 +398,6 @@ output.innerHTML+=`<div class="champion">${everyonePrefix(ek)} IF ANYONE ROLLED<
 const drRaw=pickUnique(drinkRules,2);
 const srRaw=pick(shotRules);
 
-/* drinkRules and shotRules use the Context 3 selection */
 const k3a=pickGameKey();
 const k3b=pickGameKey();
 const k3c=pickGameKey();
@@ -378,6 +411,7 @@ const urRaw=pick(universalShotRules);
 const k4=pickFullKey();
 const ur=swapUniversalEveryone(urRaw,everyonePrefix(k4));
 
+output.innerHTML+=`<div id="shareCapture">`;
 output.innerHTML+=`<div class='section'><strong>For This Game</strong></div>`;
 output.innerHTML+=`<div class="rules">${dr0}</div><div class="rules">${dr1}</div><div class="rules">${sr}</div>`;
 
@@ -404,6 +438,7 @@ onchange="enforceMin(this.closest('.cooldownStack').querySelector('.minuteWrap i
 </div>
 <div class="rules">${ur}</div>
 </div>`;
+output.innerHTML+=`</div>`;
 }
 
 function startOver(){
@@ -421,10 +456,3 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
