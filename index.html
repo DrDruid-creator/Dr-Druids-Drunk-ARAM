@@ -86,8 +86,10 @@ button.primary{font-size:16px;}
   <div id="scenePlayers">
     <div class="section"><strong>How many players?</strong><br>
       <select id="players">
-        <option value="1">1</option><option value="2">2</option>
-        <option value="3">3</option><option value="4">4</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
         <option value="5" selected>5</option>
       </select>
     </div>
@@ -344,20 +346,27 @@ const baseTriggers = [
 ];
 
 const universalShotRules=[
-"EVERYONE SHOTS if a pentakill is given, not stolen",
-"EVERYONE SHOTS if a game ends before 12 minutes",
-"EVERYONE SHOTS if a surrender vote is started and cancelled",
-"EVERYONE SHOTS if a backdoor attempt succeeds",
-"EVERYONE SHOTS if first turret falls before 5 minutes",
-"EVERYONE SHOTS if first inhibitor falls before 10 minutes",
-"EVERYONE SHOTS if a player finishes the game with 100% kill participation",
-"EVERYONE SHOTS if a pentakill occurs with no deaths on the killer’s team",
-"EVERYONE SHOTS if the game ends immediately after an ace",
-"EVERYONE SHOTS if a player achieves a pentakill without using any summoner spells",
-"EVERYONE SHOTS if a player gets a pentakill while under an enemy turret",
-"EVERYONE SHOTS if an ace occurs where all five kills are assisted by the same teammate",
-"EVERYONE SHOTS if a player finishes the game with zero deaths and at least ten kills",
-"EVERYONE SHOTS if a team wins while never activating a single Hexgate"
+"EVERYONE SHOTS if two or more snowballs hit the same target within five seconds",
+"EVERYONE SHOTS if a player dashes with snowball and immediately dies",
+"EVERYONE SHOTS if a player survives with under five percent health",
+"EVERYONE SHOTS if a kill is secured while the killer is crowd controlled",
+"EVERYONE SHOTS if a flash is used aggressively forward",
+"EVERYONE SHOTS if a flash results in no damage dealt within three seconds",
+"EVERYONE SHOTS if a player dies immediately after using their ultimate",
+"EVERYONE SHOTS if an ultimate hits three or more enemies",
+"EVERYONE SHOTS if an ultimate is completely missed",
+"EVERYONE SHOTS if a player cancels their own channeled ability",
+"EVERYONE SHOTS if a health relic is taken at full health",
+"EVERYONE SHOTS if a health relic is stolen from an ally",
+"EVERYONE SHOTS if a minion gets the killing blow on a champion",
+"EVERYONE SHOTS if a player dies alone past the first enemy turret",
+"EVERYONE SHOTS if a shield prevents lethal damage",
+"EVERYONE SHOTS if a heal saves an ally under turret",
+"EVERYONE SHOTS if two ultimates are layered on the same target",
+"EVERYONE SHOTS if a fight starts immediately after a full team respawn",
+"EVERYONE SHOTS if a player dies with all summoner spells available",
+"EVERYONE SHOTS if a player secures a kill while airborne",
+"EVERYONE SHOTS if a fight breaks out during an emote or dance"
 ];
 const champions=["Ahri","Lux","Garen","Miss Fortune","Thresh","Darius","Ezreal","Annie","Leona","Yasuo"];
 
@@ -570,6 +579,7 @@ startOverBtn.onclick=startOver;
 </script>
 </body>
 </html>
+
 
 
 
